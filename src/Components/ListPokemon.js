@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from 'react';
+import React, {useMemo, useState, useEffect} from 'react';
 import {useQuery, gql} from '@apollo/client';
 import TinderCard from 'react-tinder-card';
 import DetailLogo from '../detail-icon.png'
@@ -28,6 +28,8 @@ const gqlVariables = {
     limit: 10,
     offset: a,
 };
+
+console.log('random initial var', gqlVariables)
 const alreadyRemoved = []
 
 function capitalizeFirstLetter(string) {
@@ -37,23 +39,40 @@ function capitalizeFirstLetter(string) {
 
 
 
+
+
 const PokemonList = () => {
     const history = useHistory();
     function goToDetail(name, image){
-        swipe('left')
-    /*    history.push({
+
+        history.push({
             pathname: `/pokemon/${name}`,
             state: {detail: image}
-        });*/
+        });
     }
-    const { loading, error, data } = useQuery(GET_POKEMONS, {
+    const { loading, error, data, refetch } = useQuery(GET_POKEMONS, {
         variables: gqlVariables,
     });
+   //
     const resData = data?.pokemons?.results
     let charactersState = resData
-    const childRefs = useMemo(() => Array(resData?.length).fill(0).map(i => React.createRef()), [])
+    const childRefs = useMemo(() => Array(gqlVariables.limit).fill(0).map(i => React.createRef()), [])
     const [characters, setCharacters] = useState(resData)
     const [lastDirection, setLastDirection] = useState()
+
+    useEffect(()=>{
+        if(data){
+            let a = Math.floor(Math.random() * 1000) + 1;
+            let newVar = {
+                limit: 10,
+                offset: a,
+            };
+            console.log("random val", newVar)
+            refetch([newVar])
+            console.log('refetch',data.pokemons.results)
+            setCharacters(data.pokemons.results);
+        }
+    },[data])
 
     if (loading) return <h3>Waiting for pokemon to arrive.</h3>
     if (error) console.log('err', error)
@@ -73,11 +92,16 @@ const PokemonList = () => {
 
     const swipe = (dir) => {
         const cardsLeft = resData?.filter(person => !alreadyRemoved.includes(person.name))
+        console.log('cardsleft', cardsLeft)
         if (cardsLeft.length) {
             const toBeRemoved = cardsLeft[cardsLeft.length - 1].name // Find the card object to be removed
-            const index = resData?.map(person => person.name).indexOf(toBeRemoved) // Find the index of which to make the reference to
+          //  let reverse = [...resData]
+            // reverse.reverse()
+            const index = resData.map(person => person.name).indexOf(toBeRemoved) // Find the index of which to make the reference to
             alreadyRemoved.push(toBeRemoved) // Make sure the next card gets removed next time if this card do not have time to exit the screen
-            childRefs[index].current?.swipe(dir) // Swipe the card!
+            console.log('index', index)
+            console.log('refs', childRefs)
+             childRefs[index].current.swipe(dir) // Swipe the card!
         }
     }
 
@@ -93,8 +117,8 @@ const PokemonList = () => {
         return(
 
                 <div className="cardContainer">
-                    {resData.map((res, index) =>
-                                <TinderCard ref={childRefs[index]} className='swipe' key={res.name} preventSwipe={['down']} onSwipe={(dir) => swiped(dir, res.name)} onCardLeftScreen={() => outOfFrame(res.name)}>
+                    {data?.pokemons?.results.map((res, index) =>
+                                <TinderCard ref={childRefs[index]}  className='swipe' key={res.name} preventSwipe={['down']} onSwipe={(dir) => swiped(dir, res.name)} onCardLeftScreen={() => outOfFrame(res.name)}>
                                     <div className='card'>
                                         <div className="card-header">
 
@@ -108,7 +132,7 @@ const PokemonList = () => {
 
                                             <img className="card-image" src={res.image} alt=""/>
 
-                                            <img src={DetailLogo} className="detail-icon" alt=""  onTouchStart={(e)=> {e.stopPropagation();swipe('right')}} onClick={(e)=> {e.preventDefault();goToDetail(res.name, res.image)}} />
+                                            <img src={DetailLogo} className="detail-icon" alt=""  onTouchStart={(e)=> {e.stopPropagation();goToDetail(res.name, res.image)}} onClick={(e)=> {e.preventDefault();goToDetail(res.name, res.image)}} />
 
 
                                         </div>
@@ -124,14 +148,6 @@ const PokemonList = () => {
     )
     };
 
-    const toolbar = () => {
-        return (
-            <div className="col-12">
-                <Link to={`/pokemon/charmander`} className="btn btn-secondary mt-5">Detail</Link>
-            </div>
-
-        )
-    }
 
 
     return (
@@ -143,3 +159,8 @@ const PokemonList = () => {
 };
 
 export default PokemonList;
+export {
+    capitalizeFirstLetter,
+    PokemonList
+
+};

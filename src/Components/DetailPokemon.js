@@ -3,6 +3,7 @@ import {useQuery, gql} from '@apollo/client';
 import pokeball from '../pokeball.png'
 import {useHistory} from 'react-router-dom'
 import backButton from '../back.png'
+import PokemonList, {capitalizeFirstLetter} from './ListPokemon';
 
 export const POKEMON_DETAIL = gql`
  query pokemon($name: String!) {
@@ -30,13 +31,14 @@ export const POKEMON_DETAIL = gql`
 }
 `
 
-
+// let refetch = window.doRefetch();
 
 const Detail = (props) => {
     const history = useHistory()
     console.log("detail", props)
 
     function goBack(){
+       // refetch()
         history.goBack()
     }
 
@@ -104,7 +106,7 @@ const Detail = (props) => {
 
                     <div className="inside-border">
 
-                        <h3>{name}</h3>
+                        <h3>{capitalizeFirstLetter(name)}</h3>
                     </div>
                 </div>
                 <div className="cardContent">
