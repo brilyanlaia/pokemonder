@@ -5,6 +5,7 @@ import logo from './pokemon-logo.png'
 import ListPokemon from "./Components/ListPokemon";
 import Detail from "./Components/DetailPokemon";
 import { BrowserRouter as Router, Route } from 'react-router-dom';
+import MyPokemon from './Components/MyPokemon';
 
 const errorLink = onError(({ graphqlErrors, networkError}) =>{
   if (graphqlErrors){
@@ -40,6 +41,7 @@ function App() {
 
            <Route exact path="/" component={ListPokemon} />
            <Route exact path="/pokemon/:name" component={Detail} />
+           <Route exact path="/my-pokemon" component={MyPokemon} />
 
        </div>
      </div>
