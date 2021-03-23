@@ -1,8 +1,19 @@
 import React from "react";
 
-const ModalComponent = ({ title, show, message, click}) => {
+const ModalComponent = ({ title, show, message, click, alert}) => {
 
 
+  if(alert) return(
+    <dialog className="nes-dialog" id="dialog-default" open={show}>
+        <form method="dialog">
+          <p className="title">{title}</p>
+          <p>{message}</p>
+          <menu className="dialog-menu">
+            <button className="nes-btn" onClick={()=> click('cancel')}>Cancel</button>
+          </menu>
+        </form>
+      </dialog>
+  );
 
   return (
     <dialog className="nes-dialog" id="dialog-default" open={show}>

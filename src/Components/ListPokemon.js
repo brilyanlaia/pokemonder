@@ -2,8 +2,7 @@ import React, {useMemo, useState, useEffect} from 'react';
 import {useQuery, gql} from '@apollo/client';
 import TinderCard from 'react-tinder-card';
 import DetailLogo from '../detail-icon.png';
-import RefreshIcon from '../refresh-icon.png';
-import {Link, useHistory} from "react-router-dom";
+import {useHistory} from "react-router-dom";
 
 export const GET_POKEMONS = gql`
    query pokemons($limit: Int, $offset: Int) {
@@ -37,9 +36,6 @@ function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-function getRandom(){
-    return Math.floor(Math.random() * 1000) + 1;
-}
 
 
 
@@ -87,7 +83,7 @@ const PokemonList = () => {
     const childRefs = useMemo(() => Array(gqlVariables.limit).fill(0).map(i => React.createRef()), [])
     const [clicked, setClicked] = useState(false)
     const [characters, setCharacters] = useState(resData)
-    const [initState, setInitState] = useState(data)
+    const [initState] = useState(data)
     const [lastDirection, setLastDirection] = useState()
 
     useEffect(()=>{
@@ -109,17 +105,7 @@ const PokemonList = () => {
            
         }
        
-    },[clicked])
-
-/* 
-    useEffect(()=>{
-        if(data && !localStorage.getItem('encounter-poke')){
-            localStorage.setItem('encounter-poke', JSON.stringify(data.pokemons.results))
-            console.log('save data', data.pokemons.results)
-            setCharacters(data.pokemons.results)
-        }
-       
-    },[clicked]); */
+    },[clicked]) // eslint-disable-line react-hooks/exhaustive-deps
 
     
     if (loading) return (<div className="nes-container is-rounded bg-white">
@@ -169,6 +155,7 @@ const PokemonList = () => {
         console.log('removing: ' + nameToDelete)
         setLastDirection(direction)
         if (direction === 'right') console.log('swiped right')
+        console.log('lastdirection?', lastDirection)
         alreadyRemoved.push(nameToDelete)
     }
 
@@ -178,20 +165,7 @@ const PokemonList = () => {
         setCharacters(charactersState)
     }
 
-    const swipe = (dir) => {
-        const cardsLeft = resData?.filter(person => !alreadyRemoved.includes(person.name))
-        console.log('cardsleft', cardsLeft)
-        if (cardsLeft.length) {
-            const toBeRemoved = cardsLeft[cardsLeft.length - 1].name // Find the card object to be removed
-          //  let reverse = [...resData]
-            // reverse.reverse()
-            const index = resData.map(person => person.name).indexOf(toBeRemoved) // Find the index of which to make the reference to
-            alreadyRemoved.push(toBeRemoved) // Make sure the next card gets removed next time if this card do not have time to exit the screen
-            console.log('index', index)
-            console.log('refs', childRefs)
-             childRefs[index].current.swipe(dir) // Swipe the card!
-        }
-    }
+   
 
 
 

@@ -3,7 +3,6 @@ import ModalComponent from "./ModalComponent";
 import { useHistory } from "react-router-dom";
 
 const MyPokemon = () => {
-  const modalRef = useRef(null);
   const [showModal, setShowModal] = useState(false);
   const [selected, setSelected] = useState();
   const history = useHistory();

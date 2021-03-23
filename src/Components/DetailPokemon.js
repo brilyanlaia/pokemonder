@@ -3,7 +3,7 @@ import { useQuery, gql } from "@apollo/client";
 import pokeball from "../pokeball.png";
 import { useHistory } from "react-router-dom";
 import backButton from "../back.png";
-import PokemonList, { capitalizeFirstLetter, } from "./ListPokemon";
+import { capitalizeFirstLetter, } from "./ListPokemon";
 import ModalComponent from "./ModalComponent";
 
 export const POKEMON_DETAIL = gql`
@@ -45,7 +45,6 @@ const Detail = (props) => {
   }
 
   const [animation, setAnimation] = useState();
-  const [ showDialog, setShowDialog ] = useState(false)
 
   const name = props.match.params.name;
   const image = props.location.state.detail;
@@ -57,14 +56,7 @@ const Detail = (props) => {
     variables: gqlVar,
   });
 
-  function showSuccessModal(){
-      console.log('sucess modal')
-    setShowDialog(true)
-  }
   
-  function hideSuccessModal(){
-    setShowDialog(false)
-  }
 
   function catchPokemon() {
     let gacha = Math.random();
@@ -101,7 +93,7 @@ const Detail = (props) => {
       }
     
     } else {
-      let arr = new Array();
+      let arr = [];
       Object.assign(body, {image})
       arr.push(body);
       localStorage.setItem("my-pokemon", JSON.stringify(arr));
@@ -183,7 +175,14 @@ const Detail = (props) => {
 
   return <>
   {displayDetail()}
- 
+  <ModalComponent
+        title="Release Pokemon?"
+        message="Do you want to release your pokemon?"
+        show={showModal}
+        click={(btn) => {
+          if (btn === "cancel") setShowModal(false);
+        }}
+      ></ModalComponent>
   </>;
 };
 
