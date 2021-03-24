@@ -4,7 +4,6 @@ import pokeball from "../pokeball.png";
 import { useHistory } from "react-router-dom";
 import backButton from "../back.png";
 import { capitalizeFirstLetter, } from "./ListPokemon";
-import ModalComponent from "./ModalComponent";
 
 export const POKEMON_DETAIL = gql`
   query pokemon($name: String!) {
