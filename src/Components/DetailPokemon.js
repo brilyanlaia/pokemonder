@@ -69,57 +69,29 @@ const Detail = (props) => {
     console.log("animation end");
    // setModal(false)
     setAnimation(false);
-    if (gacha <= 0.1) {
-      // alert("You failed to catch the pokemon!");
-      setAlertType(true)
-      setTitle("Failed");
-      setContentMsg("You failed to catch the pokemon!")
-      setShowModal(true)
-      console.log("failed")
+    if (gacha <= 0.5) {
+      alert("You failed to catch the pokemon!");
+
     } else {
       console.log('success')
-      setShowModal(false)
         savePokemon();
     }
   }
 
   function savePokemon(){
-   // alert("Success catching the pokemon!");
-   console.log('show modal save?', showModal);
-    setInputModal(true)
-    setTitle("Success");
-    setContentMsg("Success catching the pokemon!, give nickname to your new pokemon")
-    setShowModal(true)
-   
-  //  let nick = prompt("Enter nickname for your pokemon:", data.pokemon.name)
-   // console.log("nickname", nick)
-    // console.log("set item", data?.pokemon);
+  alert("Success catching the pokemon!");
 
-  }
-
-  function isExisted(){
-    setShowModal(false)
-    setInputModal(false)
-    savePokemon();
-  
-  }
-
-  function continueSave(valueStr){
-    setShowModal(false, ()=>{
-      console.log('show modal?', showModal);
-    })
-
+    let nick = prompt("Enter nickname for your pokemon:", data.pokemon.name)
+    console.log("nickname", nick)
     let body = JSON.parse(JSON.stringify(data.pokemon))
-    body.name = valueStr ? valueStr : body.name
+    body.name = nick ? nick : body.name
     if (localStorage.getItem("my-pokemon")) {
       let a = localStorage.getItem("my-pokemon");
       let b = JSON.parse(a);
       if(a.includes(body.name)) {
           console.log('already exist')
-          setShowModal(false);
           alert("name already exist, please give nickname!")
-          isExisted();
-      
+          savePokemon();
       }else{
         Object.assign(body, {image})
         b.push(body);
@@ -136,7 +108,11 @@ const Detail = (props) => {
       myPokemon();
       
     }
+    // console.log("set item", data?.pokemon);
+
   }
+
+
 
   function myPokemon(){
     history.push('/my-pokemon')
@@ -211,17 +187,7 @@ const Detail = (props) => {
 
   return <>
   {displayDetail()}
-  <ModalComponent
-        title={titleMsg}
-        message={contentMsg}
-        show={showModal}
-        alert={alertType}
-        input={inputModal}
-        click={(btn) => {
-          if (btn === "cancel") setShowModal(false);
-          else setShowModal(false);continueSave(btn);
-        }}
-      ></ModalComponent>
+
   </>;
 };
 
