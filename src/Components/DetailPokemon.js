@@ -45,6 +45,12 @@ const Detail = (props) => {
   }
 
   const [animation, setAnimation] = useState();
+  const [showModal, setShowModal] = useState(false);
+  const [titleMsg, setTitle] = useState();
+  const [contentMsg, setContentMsg] = useState();
+  const [alertType, setAlertType] = useState();
+  const [inputModal, setInputModal] = useState();
+
 
   const name = props.match.params.name;
   const image = props.location.state.detail;
@@ -64,26 +70,56 @@ const Detail = (props) => {
    // setModal(false)
     setAnimation(false);
     if (gacha <= 0.1) {
-      alert("You failed to catch the pokemon!");
+      // alert("You failed to catch the pokemon!");
+      setAlertType(true)
+      setTitle("Failed");
+      setContentMsg("You failed to catch the pokemon!")
+      setShowModal(true)
+      console.log("failed")
     } else {
+      console.log('success')
+      setShowModal(false)
         savePokemon();
     }
   }
 
   function savePokemon(){
-    alert("Success catching the pokemon!");
-    let nick = prompt("Enter nickname for your pokemon:", data.pokemon.name)
-    console.log("nickname", nick)
-    console.log("set item", data?.pokemon);
+   // alert("Success catching the pokemon!");
+   console.log('show modal save?', showModal);
+    setInputModal(true)
+    setTitle("Success");
+    setContentMsg("Success catching the pokemon!, give nickname to your new pokemon")
+    setShowModal(true)
+   
+  //  let nick = prompt("Enter nickname for your pokemon:", data.pokemon.name)
+   // console.log("nickname", nick)
+    // console.log("set item", data?.pokemon);
+
+  }
+
+  function isExisted(){
+    setShowModal(false)
+    setInputModal(false)
+    savePokemon();
+  
+  }
+
+  function continueSave(valueStr){
+    setShowModal(false, ()=>{
+      console.log('show modal?', showModal);
+    })
+
     let body = JSON.parse(JSON.stringify(data.pokemon))
-    body.name = nick ? nick : body.name
+    body.name = valueStr ? valueStr : body.name
     if (localStorage.getItem("my-pokemon")) {
       let a = localStorage.getItem("my-pokemon");
       let b = JSON.parse(a);
       if(a.includes(body.name)) {
           console.log('already exist')
+          setShowModal(false);
           alert("name already exist, please give nickname!")
-          savePokemon();
+          isExisted();
+      
       }else{
         Object.assign(body, {image})
         b.push(body);
@@ -176,11 +212,14 @@ const Detail = (props) => {
   return <>
   {displayDetail()}
   <ModalComponent
-        title="Release Pokemon?"
-        message="Do you want to release your pokemon?"
+        title={titleMsg}
+        message={contentMsg}
         show={showModal}
+        alert={alertType}
+        input={inputModal}
         click={(btn) => {
           if (btn === "cancel") setShowModal(false);
+          else setShowModal(false);continueSave(btn);
         }}
       ></ModalComponent>
   </>;
