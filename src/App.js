@@ -10,7 +10,7 @@ import MyPokemon from './Components/MyPokemon';
 const errorLink = onError(({ graphqlErrors, networkError}) =>{
   if (graphqlErrors){
     graphqlErrors.map(({message,location, path}) => {
-      alert(`Graphql Erorr ${message}`)
+     return alert(`Graphql Erorr ${message}`)
     });
   }
 })

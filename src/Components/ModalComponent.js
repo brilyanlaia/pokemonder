@@ -1,4 +1,4 @@
-import React, {createRef, useState} from "react";
+import React, {createRef} from "react";
 
 const ModalComponent = ({ title, show, message, click, alert, input }) => {
 
