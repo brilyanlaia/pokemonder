@@ -45,11 +45,6 @@ const Detail = (props) => {
   }
 
   const [animation, setAnimation] = useState();
-  const [showModal, setShowModal] = useState(false);
-  const [titleMsg, setTitle] = useState();
-  const [contentMsg, setContentMsg] = useState();
-  const [alertType, setAlertType] = useState();
-  const [inputModal, setInputModal] = useState();
 
 
   const name = props.match.params.name;
