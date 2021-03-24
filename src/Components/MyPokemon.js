@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import ModalComponent from "./ModalComponent";
 import { useHistory } from "react-router-dom";
 
